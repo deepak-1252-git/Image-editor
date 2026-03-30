@@ -35,7 +35,8 @@ def resize_image():
         filename = file.filename
         input_path = os.path.join(UPLOAD_FOLDER, filename)
 
-        unique_name = f"resized_{int(time.time())}_{filename}"
+        name, ext = os.path.splitext(filename)
+        unique_name = f"resized_{int(time.time())}{ext}"
         output_path = os.path.join(OUTPUT_FOLDER, unique_name)
 
         file.save(input_path)
@@ -79,7 +80,8 @@ def compress_image():
         filename = file.filename
         input_path = os.path.join(UPLOAD_FOLDER, filename)
 
-        unique_name = f"compressed_{int(time.time())}_{filename}"
+        name,   ext = os.path.splitext(filename)
+        unique_name = f"compressed_{int(time.time())}{ext}"
         output_path = os.path.join(OUTPUT_FOLDER, unique_name)
 
         file.save(input_path)
@@ -145,7 +147,7 @@ def convert_image():
                 return "No valid images", 400
 
             #single PDF banega
-            output_filename = "merged.pdf"
+            output_filename = f"converted_{int(time.time())}.pdf"
             output_path = os.path.join(OUTPUT_FOLDER, output_filename)
 
             image_list[0].save(output_path,save_all=True,append_images=image_list[1:])
@@ -164,7 +166,7 @@ def convert_image():
             if convert_type == "pdf-to-img":
                 images = convert_from_path(input_path)
 
-                output_filename = filename.rsplit('.', 1)[0] + ".jpg"
+                output_filename = f"converted_{int(time.time())}.jpg"
                 output_path = os.path.join(OUTPUT_FOLDER, output_filename)
 
                 images[0].save(output_path, "JPEG")
@@ -176,12 +178,12 @@ def convert_image():
                     if img.mode in ("RGBA", "P"):
                         img = img.convert("RGB")
 
-                    output_filename = filename.rsplit('.', 1)[0] + ".jpg"
+                    output_filename = f"converted_{int(time.time())}.jpg"
                     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                     img.save(output_path, "JPEG")
 
                 elif convert_type == 'jpg-to-png':
-                    output_filename = filename.rsplit('.', 1)[0] + ".png"
+                    output_filename = f"converted_{int(time.time())}.png"
                     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                     img.save(output_path, "PNG")
 
@@ -189,7 +191,7 @@ def convert_image():
                     if img.mode == "RGBA":
                         img = img.convert("RGB")
 
-                    output_filename = filename.rsplit('.', 1)[0] + ".pdf"
+                    output_filename = f"converted_{int(time.time())}.pdf"
                     output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                     img.save(output_path, "PDF")
 
