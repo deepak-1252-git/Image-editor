@@ -1,0 +1,52 @@
+{% extends 'convert.html' %}
+{% block head %}
+    <style>body {
+            text-align: center;
+            font-family: Arial;
+            background: #f5f5f5;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 50px auto;
+            width: 600px;
+            border-radius: 10px;
+            border: 1px dashed gray; 
+            box-shadow: 0 0 10px gray;
+        }
+        img {
+            max-width: 100%;
+            margin: 10px 0;
+        }
+        .green {
+            display: inline-block;
+            padding: 10px;
+            background: rgb(41, 128, 41);
+            color: white;
+            /* width: 50px; */
+            height: 7vh;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        </style>
+{% endblock head %}
+{% block body %}
+    <div class="box">
+        <h2>Preview</h2>
+        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+
+        {% for file in files %}
+            {% if file_type == 'PDF' %}
+                <iframe src="/outputs/{{ file }}" width="200"></iframe>
+            {% else %}
+                <img src="/outputs/{{ file }}"  >
+            {% endif %}
+            <p>{{ file }}</p>
+            <!-- <a href="/download/{{ file }}">Download</a><br><br> -->
+            <a class="green" href="/download/{{ filename }}">Download</a><br><br>
+        {% endfor %}
+
+        </div>
+        <a class="green" href="/convertor">Convert Another Image</a>
+    </div>       
+{% endblock body %}

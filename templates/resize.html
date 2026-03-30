@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+    body {
+        font-family: Arial;
+        text-align: center;
+        background: #f5f5f5; /* #f5f5f5;*/
+    }
+
+    .box {
+        background: rgb(94, 92, 92); /*whie*/
+        padding: 20px;
+        margin: 50px auto;
+        width: 50vw;
+        /*300 px*/
+        border-radius: 10px;
+        box-shadow: 0 0 10px gray;
+    }
+
+    input,
+    button {
+        margin: 10px;
+        padding: 8px;
+        width: 85%;
+    }
+    .bttn{
+        border-color: #b0b0b0;
+        border-radius: 5px;
+    }
+    .bttn:hover {
+        background-color: #198754;
+        border-color: #198754 ;
+        color: white;
+    }
+    .choosefile:hover{
+        background-color: #b0b0b0;
+    }
+</style>
+{% endblock head %}
+{% block body %}
+
+<div class="box">
+    <h2>Image Resizer</h2>
+    <form action="/resizer" method="post" enctype="multipart/form-data">
+        <input  type="file" id="fileInput" name="image" required ><br>
+        <p id="fileSize" style="font-weight:bold; color:rgb(240, 240, 244);"></p>
+        <input id="targetWidth" type="number" name="width" placeholder="Width" required><br>
+        <input id="targetHeight" type="number" name="height" placeholder="Height" required><br>
+        <button class="bttn" type="submit">Resize Image</button>
+    </form>
+</div>
+ 
+<script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+        // alert("File selected: " + this.files[0].name);
+        const file = this.files[0];
+        if (file) {
+            const img = new Image();
+            img.onload = function () {
+                const width = img.width;
+                const height = img.height;
+
+                document.getElementById("fileSize").innerText =
+                    "New Resolution: " + width + " × " + height + " px";
+
+                document.getElementById("targetWidth").value = Math.round(width / 2);
+                document.getElementById("targetHeight").value = Math.round(height / 2);
+            };
+
+            img.src = URL.createObjectURL(file);
+        }
+
+    });  
+</script>
+
+{% endblock body %}

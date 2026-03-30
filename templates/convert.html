@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block head %}
+    <style>
+        body{
+            font-family: Arial;
+            text-align: center;
+            background: #f0f0f0;
+        }
+        .box {
+            background: rgb(94, 92, 92); /*whie*/
+            padding: 20px;
+            margin: 50px auto;
+            width: 50vw;
+            /*300 px*/
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+        .format-buttons input {
+            display: none;
+        }
+        .format-buttons label {
+            padding: 4px 20px;
+            margin: 5px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            background: #f0f0f0;
+            transition: 0.1s;
+        }
+        .format-buttons label:hover {
+            background: #ddd;
+        }
+        .format-buttons input:checked + label {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .bttn{
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+    </style>
+{% endblock head %}
+{% block body %}  
+    <div class="box">
+    <h1>Image Convertor</h1>
+    <form action="/convertor" method="post" enctype="multipart/form-data">
+        <label >You can select multipal Images</label><br>
+
+        <input  type="file" id="fileInput" name="image" multiple required ><br> 
+        <p id="fileType" style="font-weight:bold; color:rgb(240, 240, 244);"></p>
+
+        <div class="format-buttons">
+            <input type="radio"id="png" name="type" value="png-to-jpg" required>
+            <label for="png">JPG</label>
+
+            <input type="radio" id="jpg" name="type" value="jpg-to-png">
+            <label for="jpg">PNG</label><br>
+
+            <input type="radio" id="pdf1" name="type" value="single_img_to_single_pdf">
+            <label for="pdf1">Seperate PDF</label>
+            
+            <input type="radio" id="pdf" name="type" value="multi_img_to_single_pdf">
+            <label for="pdf">Merged PDF</label><br>
+
+            <input type="radio" id="img" name="type" value="pdf-to-img">
+            <label for="img">PDF To Image</label>
+             
+        </div>
+
+        <button class="bttn" type="submit">Convert Image</button>
+    </form>
+    </div>
+
+    <script>
+        document.getElementById("fileInput").addEventListener("change", function () {
+            const file = this.files[0]; 
+
+            if (file) {
+                const ext = file.name.split('.').pop().toUpperCase();
+
+                const mime = file.type;
+                document.getElementById("fileType").innerText =
+                    "File Type : " + ext + " ";
+            }
+        });
+    </script>
+{% endblock body %}
