@@ -3,7 +3,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 import os
 import time
-
+    
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
