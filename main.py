@@ -3,11 +3,11 @@ from PIL import Image
 from pdf2image import convert_from_path
 import os
 import time
-    
+
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "uploads"
-OUTPUT_FOLDER = "outputs"
+UPLOAD_FOLDER = "/tmp"
+OUTPUT_FOLDER = "/tmp"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
