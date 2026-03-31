@@ -149,9 +149,7 @@ def convert_image():
             #single PDF banega
             output_filename = f"converted_{int(time.time())}.pdf"
             output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-
             image_list[0].save(output_path,save_all=True,append_images=image_list[1:])
-
             output_files.append(output_filename)
 
         else:
@@ -196,7 +194,9 @@ def convert_image():
                         output_filename = f"converted_{int(time.time())}.pdf"
                         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                         img.save(output_path, "PDF")
-                    
+                    else:
+                        continue
+
                     output_files.append(output_filename)
 
         if not output_files:
@@ -215,9 +215,6 @@ def get_output_file(filename):
 @app.route('/download/<filename>')
 def download_file(filename):
     return send_from_directory(OUTPUT_FOLDER, filename, as_attachment=True)
-
-# if __name__ == "__main__":
-#     app.run(debug=True)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
