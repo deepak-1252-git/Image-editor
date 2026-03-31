@@ -129,7 +129,7 @@ def convert_image():
             image_list = []
 
             for file in files:
-                if file.filename == "":
+                if file.filename == "": 
                     continue
 
                 filename = file.filename
@@ -152,55 +152,57 @@ def convert_image():
 
             image_list[0].save(output_path,save_all=True,append_images=image_list[1:])
 
-            return render_template('convert_result.html',files=[output_filename],
-                    filename=output_filename,file_type="PDF" )
-
-        for file in files:
-            if file.filename == "":
-                continue
-
-            filename = file.filename
-            input_path = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(input_path)
-            
-            if convert_type == "pdf-to-img":
-                images = convert_from_path(input_path)
-
-                output_filename = f"converted_{int(time.time())}.jpg"
-                output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-
-                images[0].save(output_path, "JPEG")
-
-            else:
-                img = Image.open(input_path)
-
-                if convert_type == 'png-to-jpg':
-                    if img.mode in ("RGBA", "P"):
-                        img = img.convert("RGB")
-
-                    output_filename = f"converted_{int(time.time())}.jpg"
-                    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                    img.save(output_path, "JPEG")
-
-                elif convert_type == 'jpg-to-png':
-                    output_filename = f"converted_{int(time.time())}.png"
-                    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                    img.save(output_path, "PNG")
-
-                elif convert_type == "single_img_to_single_pdf":
-                    if img.mode == "RGBA":
-                        img = img.convert("RGB")
-
-                    output_filename = f"converted_{int(time.time())}.pdf"
-                    output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                    img.save(output_path, "PDF")
-
-                else:
-                    return "Invalid conversion type"
-                
             output_files.append(output_filename)
 
-        file_type = output_filename.split('.')[-1].upper()
+        else:
+            for file in files:
+                if file.filename == "":
+                    continue
+
+                filename = file.filename
+                input_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(input_path)
+                
+                if convert_type == "pdf-to-img":
+                    try:
+                        images = convert_from_path(input_path)
+                        output_filename = f"converted_{int(time.time())}.jpg"
+                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+                        images[0].save(output_path, "JPEG")
+                        output_files.append(output_filename)
+                    except Exception as e:
+                        return f"PDF Error: {e}", 500
+
+                else:
+                    img = Image.open(input_path)
+
+                    if convert_type == 'png-to-jpg':
+                        if img.mode in ("RGBA", "P"):
+                            img = img.convert("RGB")
+
+                        output_filename = f"converted_{int(time.time())}.jpg"
+                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+                        img.save(output_path, "JPEG")
+
+                    elif convert_type == 'jpg-to-png':
+                        output_filename = f"converted_{int(time.time())}.png"
+                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+                        img.save(output_path, "PNG")
+
+                    elif convert_type == "single_img_to_single_pdf":
+                        if img.mode == "RGBA":
+                            img = img.convert("RGB")
+
+                        output_filename = f"converted_{int(time.time())}.pdf"
+                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+                        img.save(output_path, "PDF")
+                    
+                    output_files.append(output_filename)
+
+        if not output_files:
+            return "Processing failed", 400
+
+        file_type = output_files[0].split('.')[-1].upper()
                 
         return render_template('convert_result.html', files=output_files,filename=output_files[0],file_type=file_type)
     return render_template('convert.html')
