@@ -3,6 +3,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 import os
 import time
+import uuid
 
 app = Flask(__name__)
 
@@ -164,7 +165,7 @@ def convert_image():
                 if convert_type == "pdf-to-img":
                     try:
                         images = convert_from_path(input_path)
-                        output_filename = f"converted_{int(time.time())}.jpg"
+                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.jpg"
                         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                         images[0].save(output_path, "JPEG")
                         output_files.append(output_filename)
@@ -178,12 +179,12 @@ def convert_image():
                         if img.mode in ("RGBA", "P"):
                             img = img.convert("RGB")
 
-                        output_filename = f"converted_{int(time.time())}.jpg"
+                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.jpg"
                         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                         img.save(output_path, "JPEG")
 
                     elif convert_type == 'jpg-to-png':
-                        output_filename = f"converted_{int(time.time())}.png"
+                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.png"
                         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                         img.save(output_path, "PNG")
 
@@ -191,7 +192,7 @@ def convert_image():
                         if img.mode == "RGBA":
                             img = img.convert("RGB")
 
-                        output_filename = f"converted_{int(time.time())}.pdf"
+                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.pdf"
                         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
                         img.save(output_path, "PDF")
                     else:

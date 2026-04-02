@@ -1,12 +1,29 @@
 {% extends 'base.html' %}
 {% block body %}
-    <div class="container my-3">
         <form action="/" >
-            <div class="d-grid gap-2">
-                <a href="/resizer" class="btn btn-primary">Resize Image</a>
-                <a href="/compressor" class="btn btn-primary">Compress Image</a>    
-                <a href="/convertor" class="btn btn-primary">Convert Image</a>    
+            <div class="hero">
+                <h2>Powerful Image Tools</h2>
+                <p>Fast, simple, and entirely in your browser.</p>
+            </div>
+            <div class="container">
+                <div class="card">
+                    <div class="icon-circle">📐</div>
+                    <h3>Resize Image</h3>
+                    <p>Change dimensions for social media or web use.</p>
+                    <a href="/resizer" class="btn">Launch Tool</a>
+                </div>
+                <div class="card">
+                    <div class="icon-circle">🗜️</div>
+                    <h3>Compress Image</h3>
+                    <p>Reduce file size without losing quality.</p>
+                    <a href="/compressor" class="btn">Launch Tool</a>
+                </div>
+                <div class="card">
+                    <div class="icon-circle">🔄</div>
+                    <h3>Convert Image</h3>
+                    <p>Switch between PNG, JPG, and PDF instantly.</p>
+                    <a href="/convertor" class="btn">Launch Tool</a>
+                </div>
             </div>
         </from>
-    <div>
 {% endblock body %}

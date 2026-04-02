@@ -1,56 +1,128 @@
 {% extends 'base.html' %}
 {% block head %}
     <style>
-        body{
-            font-family: Arial;
+        :root {
+            --primary-glow: #007bff;
+            --accent: #00d4ff;
+        }
+        body {
+            /* removal */
+            /* background: 
+            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  
+            url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');  */
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+        }
+        /* Container Resizer */
+        .convertor-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff; /* Neumorphic Shadow */
+            width: 100%;
+            max-width: 450px;
+            margin-top: 50px;
             text-align: center;
-            background: #f0f0f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .box {
-            background: rgb(94, 92, 92); /*whie*/
-            padding: 20px;
-            margin: 50px auto;
-            width: 50vw;
-            /*300 px*/
-            border-radius: 10px;
-            box-shadow: 0 0 10px gray;
+        .convertor-card h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
-        .format-buttons input {
-            display: none;
+        /* Style for File Input */
+        .file-input-wrapper {
+            background: #eef1f6;
+            padding: 50px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px dashed #007bff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .file-input-wrapper:hover {
+            background: #e0e7ff;
+        }
+        /* Modern Input Fields */
+        .format-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px; /* Buttons ke beech gap */
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
         .format-buttons label {
-            padding: 4px 20px;
-            margin: 5px;
-            border: 1px solid #333;
-            border-radius: 20px;
+            padding: 10px 25px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.05), 
+                        -4px -4px 10px rgba(255, 255, 255, 0.8);  
+            font-weight: 500;
+            color: #475569;
             cursor: pointer;
-            font-size: 14px;
-            background: #f0f0f0;
-            transition: 0.1s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none; 
         }
+        /* Hover Effect: Jab mouse upar aaye */
         .format-buttons label:hover {
-            background: #ddd;
+            background: #db7575;
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 15px rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            border-color: rgba(0, 123, 255, 0.2);
         }
         .format-buttons input:checked + label {
             background: #4CAF50;
             color: white;
             border-color: #4CAF50;
         }
-        .bttn{
-            padding: 8px;
-            margin-top: 10px;
+        .format-buttons input {   /*hide check box*/
+            display: none;
+        } 
+        /* Glowing Button */
+        .convert-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
+        .convert-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+        }
+        .convert-btn:active {
+            transform: scale(0.98);
+        }
     </style>
 {% endblock head %}
 {% block body %}  
-    <div class="box">
-    <h1>Image Convertor</h1>
-    <form action="/convertor" method="post" enctype="multipart/form-data">
-        <label >You can select multipal Images</label><br>
 
-        <input  type="file" id="fileInput" name="image" multiple required ><br> 
-        <p id="fileType" style="font-weight:bold; color:rgb(240, 240, 244);"></p>
+<div class="convertor-card">
+    <form action="/convertor" method="post" enctype="multipart/form-data">
+        <h2>Image Convertor</h2>
+        
+        <div class="file-input-wrapper">
+            <label >You can select multipal Images</label><br>
+            <input  type="file" id="fileInput" name="image" multiple required ><br> 
+        </div>
+
+        <p id="fileType" style="font-weight:bold; color:rgb(49, 49, 55);"></p>
 
         <div class="format-buttons">
             <input type="radio"id="png" name="type" value="png-to-jpg" required>
@@ -67,24 +139,23 @@
 
             <input type="radio" id="img" name="type" value="pdf-to-img">
             <label for="img">PDF To Image</label>
-             
         </div>
 
-        <button class="bttn" type="submit">Convert Image</button>
+        <button class="convert-btn" type="submit">Convert Image</button>
     </form>
-    </div>
+</div>
 
-    <script>
-        document.getElementById("fileInput").addEventListener("change", function () {
-            const file = this.files[0]; 
+<script>
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const file = this.files[0]; 
 
-            if (file) {
-                const ext = file.name.split('.').pop().toUpperCase();
+        if (file) {
+            const ext = file.name.split('.').pop().toUpperCase();
 
-                const mime = file.type;
-                document.getElementById("fileType").innerText =
-                    "File Type : " + ext + " ";
-            }
-        });
-    </script>
+            const mime = file.type;
+            document.getElementById("fileType").innerText =
+                "File Type : " + ext + " ";
+        }
+    });
+</script>
 {% endblock body %}

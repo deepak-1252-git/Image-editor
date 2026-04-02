@@ -1,59 +1,112 @@
 {% extends 'base.html' %}
-
 {% block head %}
 <style>
-    body {
-        font-family: Arial;
-        text-align: center;
-        background: #f5f5f5; /* #f5f5f5;*/
-    }
-
-    .box {
-        background: rgb(94, 92, 92); /*whie*/
-        padding: 20px;
-        margin: 50px auto;
-        width: 50vw;
-        /*300 px*/
-        border-radius: 10px;
-        box-shadow: 0 0 10px gray;
-    }
-
-    input,
-    button {
-        margin: 10px;
-        padding: 8px;
-        width: 85%;
-    }
-    .bttn{
-        border-color: #b0b0b0;
-        border-radius: 5px;
-    }
-    .bttn:hover {
-        background-color: #198754;
-        border-color: #198754 ;
-        color: white;
-    }
-    .choosefile:hover{
-        background-color: #b0b0b0;
-    }
-</style>
+        :root {
+            --primary-glow: #007bff;
+            --accent: #00d4ff;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+        }
+        /* Container Resizer */
+        .resizer-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff; /* Neumorphic Shadow */
+            width: 100%;
+            max-width: 450px;
+            margin-top: 50px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .resizer-card h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        /* Style for File Input */
+        .file-input-wrapper {
+            background: #eef1f6;
+            padding: 50px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px dashed #007bff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .file-input-wrapper:hover {
+            background: #e0e7ff;
+        }
+        /* Modern Input Fields */
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 12px;
+            background: #f8fafc;
+            box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus {
+            box-shadow: inset 2px 2px 4px #d1d9e6, inset -2px -2px 4px #ffffff;
+            border: 1px solid var(--primary-glow);
+        }
+        /* Glowing Button */
+        .resize-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .resize-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+        }
+        .resize-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
 {% endblock head %}
 {% block body %}
 
-<div class="box">
-    <h2>Image Resizer</h2>
+<div class="resizer-card">
     <form action="/resizer" method="post" enctype="multipart/form-data">
-        <input  type="file" id="fileInput" name="image" required ><br>
-        <p id="fileSize" style="font-weight:bold; color:rgb(240, 240, 244);"></p>
-        <input id="targetWidth" type="number" name="width" placeholder="Width" required><br>
-        <input id="targetHeight" type="number" name="height" placeholder="Height" required><br>
-        <button class="bttn" type="submit">Resize Image</button>
+        <h2>Image Resizer</h2>
+
+        <div class="file-input-wrapper">
+            <input  type="file" id="fileInput" name="image" required > 
+        </div>
+        
+        <p id="fileSize" style="font-weight:bold; color:rgb(49, 49, 55);"></p>
+
+        <input id="targetWidth" type="number" name="width" placeholder="Width (px)" required><br>
+        <input id="targetHeight" type="number" name="height" placeholder="Height (px)" required><br>
+        <button class="resize-btn" type="submit">Resize Image</button>
     </form>
 </div>
  
 <script>
     document.getElementById("fileInput").addEventListener("change", function () {
-        // alert("File selected: " + this.files[0].name);
         const file = this.files[0];
         if (file) {
             const img = new Image();
@@ -67,10 +120,8 @@
                 document.getElementById("targetWidth").value = Math.round(width / 2);
                 document.getElementById("targetHeight").value = Math.round(height / 2);
             };
-
             img.src = URL.createObjectURL(file);
         }
-
     });  
 </script>
 
