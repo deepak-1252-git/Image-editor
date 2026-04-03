@@ -1,6 +1,7 @@
 from flask import Flask, request ,render_template,send_from_directory
 from PIL import Image
 from pdf2image import convert_from_path
+from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 import os
 import time
 import uuid
@@ -171,7 +172,6 @@ def convert_image():
                         output_files.append(output_filename)
                     except Exception as e:
                         return f"PDF Error: {e}", 500
-
                 else:
                     img = Image.open(input_path)
 
@@ -208,6 +208,76 @@ def convert_image():
         return render_template('convert_result.html', files=output_files,filename=output_files[0],file_type=file_type)
     return render_template('convert.html')
 
+@app.route('/pdf_tool', methods=['GET','POST'])
+def merge_pdf():
+    if request.method == 'POST':
+        files = request.files.getlist('pdfs')
+        pdf_type = request.form.get('type')
+        page = request.form.get('page')
+
+        if not files or not pdf_type:
+            return "Missing file or type", 400
+
+        total_pages = None
+
+        if pdf_type == "merge-pdf":
+            merger = PdfMerger()
+
+            output_filename = f"merged_{int(time.time())}-{uuid.uuid4()}.pdf"
+            output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+
+            for file in files:
+                merger.append(file)
+
+            merger.write(output_path)
+            merger.close()
+
+        elif pdf_type == "split-pdf":
+            file = files[0]
+            reader = PdfReader(file)
+            total_pages = len(reader.pages)
+
+            if not page:
+                return "Page number required for split", 400
+            
+            writer = PdfWriter()
+
+            if '-' in page:
+                try:
+                    start, end = map(int, page.split('-'))
+                except:
+                    return "Invalid range format", 400
+                start -= 1
+                end -= 1
+
+                if start < 0 or end >= total_pages or start > end:
+                    return f"Invalid page (Total pages: {total_pages})", 400
+                
+                for i in range(start, end + 1):
+                    writer.add_page(reader.pages[i])
+            else:
+                try:
+                    page_num = int(page) - 1
+                except:
+                    return "Invalid page number", 400
+                
+                if page_num < 0 or page_num >= total_pages:
+                    return f"Invalid page (Total pages: {total_pages})", 400
+
+                writer.add_page(reader.pages[page_num])
+                
+            output_filename = f"splited_{int(time.time())}-{uuid.uuid4()}.pdf"
+            output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+
+            with open(output_path, "wb") as f:
+                writer.write(f)
+
+        return render_template('pdftool_result.html',files=[output_filename],
+                               file_type="PDF",filename=output_filename
+                               )
+    return render_template('pdftool.html')
+
+
 # # 🔽 download route
 @app.route('/outputs/<filename>')
 def get_output_file(filename):
@@ -220,3 +290,4 @@ def download_file(filename):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+    # app.run(debug=True)
