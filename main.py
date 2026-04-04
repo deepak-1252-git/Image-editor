@@ -1,11 +1,9 @@
-from flask import Flask, request ,render_template,send_from_directory
+from flask import Flask, request ,render_template,send_from_directory,jsonify
 from PIL import Image
 from pdf2image import convert_from_path
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
-import os
-import time
-import uuid
-
+import os, time, uuid
+  
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "/tmp"
@@ -277,6 +275,36 @@ def merge_pdf():
                                )
     return render_template('pdftool.html')
 
+# Upload Original Image
+@app.route('/upload', methods=['POST'])
+def upload_image():
+    file = request.files['image']
+
+    filename = str(uuid.uuid4()) + ".jpg"
+    path = os.path.join(UPLOAD_FOLDER, filename)
+
+    img = Image.open(file)
+
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
+    img.save(path)
+
+    return jsonify({"filename": filename})
+
+@app.route('/crop_rotate', methods=['GET','POST'])
+def crop_rotate():
+    if request.method == 'POST':
+        file = request.files['image']
+        filename = str(uuid.uuid4()) + ".jpg"
+        path = os.path.join(OUTPUT_FOLDER, filename)
+
+        img = Image.open(file)
+        img = img.convert("RGB")
+        img.save(path, "JPEG", quality=95)
+
+        return jsonify({"filename": filename})
+    return render_template('croprotate.html')
 
 # # 🔽 download route
 @app.route('/outputs/<filename>')
@@ -285,9 +313,9 @@ def get_output_file(filename):
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory(OUTPUT_FOLDER, filename, as_attachment=True)
+    return send_from_directory(OUTPUT_FOLDER, filename,as_attachment=True)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-    # app.run(debug=True)
+     

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Crop Rotate</title>
+
+    <!-- Cropper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
+    <style>
+        :root {
+            --primary-glow: #007bff;
+            --accent: #00d4ff;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+        }
+        .main-container {
+            display: flex;
+            width: 90%;
+            height: 85vh;
+            margin: auto;
+            gap: 20px;
+        }
+        /* LEFT: IMAGE 60% */
+        .image-box {
+            flex: 7;  
+            width: 100%;
+            height: 75hv;      
+            overflow: hidden;
+            background-color: #929aa3;
+            display: block;
+        }
+        #image {
+            display: block;
+            max-width: 100%;
+        }
+        /* RIGHT: CONTROLS 40% */
+        .control-section {
+            /* flex: 1; */
+            background: rgb(120, 109, 141);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+        .control-section h2 {
+            color: #f9f5f5;
+            margin-bottom: 30px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        /*Glowing Button */
+        .control-section button {
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .control-section button:active { transform: scale(1.08); }
+    </style>
+{% endblock head %}
+{% block body %}
+<div class="main-container">
+
+    <!-- LEFT SIDE (IMAGE) -->
+    <div class="image-box">
+        <img id="image" >
+    </div>
+    
+    <!-- RIGHT SIDE (CONTROLS) -->
+    <div class="control-section">       
+        <h2>Edit Image</h2>
+        
+        <input type="file" id="inputImage">
+        <button onclick="rotateLeft()">↺ Rotate Left</button>
+        <button onclick="rotateRight()">↻ Rotate Right</button>
+        <button onclick="cropImage()">Download</button>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+<script src="/static/script.js"></script>
+
+{% endblock body %}
