@@ -1,41 +1,75 @@
 {% extends 'base.html' %}
 {% block body %}
-        <form action="/" >
-            <div class="hero">
-                <h2>Powerful Image Tools</h2>
-                <p>Fast, simple, and entirely in your browser.</p>
+    <div class="hero">
+        <h2>All-In-One <span style="color: var(--primary);">Studio.</span></h2>
+        <p>Premium media tools powered by your browser. No uploads, no servers, just pure privacy and blazing fast speed.</p>
+        
+        <div class="trust-badge">
+            <span>⚡ Instant Processing</span>
+            <span>🔒 100% Private</span>
+            <span>💎 Zero Watermarks</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="icon-circle">📐</div>
+            <h3>Smart Resize</h3>
+            <p>Perfectly scale images for social media or print without losing sharpness.</p>
+            <a href="/resizer" class="btn">Launch Tool</a>
+        </div>
+
+        <div class="card">
+            <div class="icon-circle">🗜️</div>
+            <h3>HD Compress</h3>
+            <p>Drastically reduce file size while maintaining stunning visual quality.</p>
+            <a href="/compressor" class="btn">Launch Tool</a>
+        </div>
+
+        <div class="card">
+            <div class="icon-circle">🔄</div>
+            <h3>Magic Convert</h3>
+            <p>Convert between PNG, JPG, and WebP formats in the blink of an eye.</p>
+            <a href="/convertor" class="btn">Launch Tool</a>
+        </div>
+
+        <div class="card">
+            <div class="icon-circle">📄</div>
+            <h3>PDF Pro</h3>
+            <p>Merge multiple PDFs or split them with professional-grade precision.</p>
+            <a href="/pdf_tool" class="btn">Launch Tool</a>
+        </div>
+
+        <div class="card">
+            <div class="icon-circle">✂️</div>
+            <h3>Crop & Edit</h3>
+            <p>Quickly trim, rotate, and flip your photos with our intuitive editor.</p>
+            <a href="/crop_rotate" class="btn">Launch Tool</a>
+        </div>
+
+        <div class="card" style="border: 1px dashed var(--primary); opacity: 0.7;">
+            <div class="icon-circle" style="background: var(--glass);">🚀</div>
+            <h3>Coming Soon</h3>
+            <p>We are building more awesome tools to supercharge your workflow.</p>
+            <a href="#" class="btn" style="border-color: #444; pointer-events: none;">Stay Tuned</a>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding: 80px 20px; background: rgba(76, 54, 54, 0.2);">
+        <h3 style="color: white; margin-bottom: 40px;">How it works?</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <h4 style="color: var(--primary);">1. Select</h4>
+                <p style="color: #94a3b8;">Choose your image or PDF from your device.</p>
             </div>
-            <div class="container">
-                <div class="card">
-                    <div class="icon-circle">📐</div>
-                    <h3>Resize Image</h3>
-                    <p>Change dimensions according to your uses.</p>
-                    <a href="/resizer" class="btn">Launch Tool</a>
-                </div>
-                <div class="card">
-                    <div class="icon-circle">🗜️</div>
-                    <h3>Compress Image</h3>
-                    <p>Reduce file size without losing quality.</p>
-                    <a href="/compressor" class="btn">Launch Tool</a>
-                </div>
-                <div class="card">
-                    <div class="icon-circle">🔄</div>
-                    <h3>Convert Image</h3>
-                    <p>Switch between PNG, JPG, and PDF instantly.</p>
-                    <a href="/convertor" class="btn">Launch Tool</a>
-                </div>
-                <div class="card">
-                    <div class="icon-circle">🔄</div>
-                    <h3>PDF Tools</h3>
-                    <p>Merge PDF and Split PDF instantly.</p>
-                    <a href="/pdf_tool" class="btn">Launch Tool</a>
-                </div>
-                <div class="card">
-                    <div class="icon-circle">⛓️‍💥</div>
-                    <h3>Crop + Rotate</h3>
-                    <p>Crop image and rotate instantly.</p>
-                    <a href="/crop_rotate" class="btn">Launch Tool</a>
-                </div>
+            <div class="col-md-3">
+                <h4 style="color: var(--primary);">2. Process</h4>
+                <p style="color: #94a3b8;">Your browser does the work. No files are uploaded.</p>
             </div>
-        </from>
+            <div class="col-md-3">
+                <h4 style="color: var(--primary);">3. Save</h4>
+                <p style="color: #94a3b8;">Download your optimized file instantly.</p>
+            </div>
+        </div>
+    </div>
 {% endblock body %}
