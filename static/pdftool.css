@@ -1,0 +1,113 @@
+:root {
+    --pdf-red: #ef4444;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+.pdf-wrapper {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.main-card {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 40px;
+    color: white;
+}
+
+.upload-box {
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 50px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-box:hover {
+    border-color: var(--pdf-red);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+/* Action Grid */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.action-card input {
+    display: none;
+}
+
+.action-card label {
+    display: block;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.action-card input:checked+label {
+    background: var(--pdf-red);
+    border-color: white;
+    transform: translateY(-5px);
+}
+
+/* Dynamic Inputs */
+#splitInput,
+#lockInput {
+    display: none;
+    margin-top: 15px;
+    animation: fadeIn 0.4s;
+}
+
+.pdf-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: white;
+    outline: none;
+}
+
+.btn-process {
+    width: 100%;
+    padding: 16px;
+    background: var(--pdf-red);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#resultArea {
+    display: none;
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.btn-reset {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+    margin-top: 30px;
+}

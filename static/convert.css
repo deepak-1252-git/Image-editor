@@ -1,0 +1,124 @@
+:root {
+    --primary: #6366f1;
+    --secondary: #00d4ff;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+.convertor-wrapper {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.main-card {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 40px;
+    color: white;
+}
+
+.upload-box {
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 25px;
+}
+
+.upload-box:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+/* Format Grid */
+.format-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.format-option input {
+    display: none;
+}
+
+.format-option label {
+    display: block;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.format-option input:checked+label {
+    background: var(--primary);
+    border-color: var(--secondary);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    transform: scale(1.05);
+}
+
+.convert-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Result Preview */
+#resultArea {
+    display: none;
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 40px;
+}
+
+.result-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.file-preview-mini {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.btn-dl {
+    background: white;
+    color: black !important;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.btn-reset {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 12px;
+}

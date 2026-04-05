@@ -1,161 +1,77 @@
 {% extends 'base.html' %}
 {% block head %}
-    <title>Crop Rotate</title>
+<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
 
-    <!-- Cropper CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
-    <style>
-        :root {
-            --primary-glow: #007bff;
-            --accent: #00d4ff;
-        }
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            align-items: center;
-        }
-        .main-container {
-            display: flex;
-            width: 98%;
-            height: 85vh;
-            margin: auto;
-            gap: 20px;
-        }
-        /* LEFT: IMAGE 60% */
-        .image-box {
-            flex: 7 ;  
-            width: 100%;
-            overflow: hidden;
-            background-color: #929aa3;
-            display: flex;
-        }
-        #image {
-            display: block;
-            max-width: 100%;
-            max-height: 100%
-        }
-        /* RIGHT: CONTROLS 40% */
-        .control-section {
-            flex: 2;
-            background: rgb(120, 109, 141);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto; 
-        }
-        .control-section h2 {
-            color: #f9f5f5;
-            margin-bottom: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        #inputImage {
-            color: white;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-        #aspectRatio {
-            padding: 10px;
-            border-radius: 12px;
-            border: none;
-            background: white;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .button-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;  
-            gap: 10px;
-        }
-        .btn-full {
-            grid-column: span 2; 
-            margin-top: 10px;
-            background: linear-gradient(135deg, #28a745, #218838) !important; 
-        }
-        /*Glowing Button */
-        .control-section button {
-            padding: 8px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #007bff, #00d4ff);
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .control-section button:active { transform: scale(1.08); }
-        /* Spinner Design */
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); }}
-        /* Button Disabled State */
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-    </style>
-
+<link rel="stylesheet" href="../static/croprotate.css">
 {% endblock head %}
-{% block body %}
-<div class="main-container">
 
-    <!-- LEFT SIDE (IMAGE) -->
+{% block body %}
+<div class="editor-wrapper">
     <div class="image-box">
-        <img id="image" >
+        <img id="image" src="https://via.placeholder.com/800x600?text=Upload+an+Image+to+Start">
     </div>
     
-    <!-- RIGHT SIDE (CONTROLS) -->
-    <div class="control-section">       
-        <h2>Edit Image</h2>
+    <div class="control-section">
+        <h3>Photo Editor</h3>
         
-        <input type="file" id="inputImage">
-    
-        <label style="color: white; font-size: 14px;">Aspect Ratio:</label>
-        <select id="aspectRatio" onchange="setAspectRatio(this.value)">
-            <option value="NaN">Free Crop</option>
-            <option value="1">1:1 (Instagram)</option>
-            <option value="1.777">16:9 (YouTube)</option>
-            <option value="0.562">9:16 (Wallpaper)</option>
-        </select>
-    
-        <div class="button-grid">
-            <button onclick="rotateLeft()">↺ Left</button>
-            <button onclick="rotateRight()">↻ Right</button>
-    
-            <button onclick="cropper.zoom(0.1)">➕ Zoom In</button>
-            <button onclick="cropper.zoom(-0.1)">➖ Zoom Out</button>
-    
-            <button onclick="flipHorizontal()">↔ Flip H</button>
-            <button onclick="flipVertical()">↕ Flip V</button>
-    
-            <button class="btn-full" onclick="resetEditor()" style="background: #6c757d !important;">Reset All</button>
-            
-            <button class="btn-full" onclick="cropImage(this)">Download Image</button>
+        <div>
+            <label class="tool-label">Import Image</label>
+            <label for="inputImage" class="custom-file-upload w-100">
+                <i class="fas fa-upload me-2"></i> Choose File
+            </label>
+            <input type="file" id="inputImage" hidden>
         </div>
+
+        <div>
+            <label class="tool-label">Aspect Ratio</label>
+            <select id="aspectRatio" onchange="setAspectRatio(this.value)">
+                <option value="NaN">Free Style</option>
+                <option value="1">1:1 Square</option>
+                <option value="1.777">16:9 YouTube</option>
+                <option value="0.562">9:16 Reels/TikTok</option>
+                <option value="0.666">2:3 Portrait</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="tool-label">Transform Tools</label>
+            <!-- <div class="button-grid">
+                <button class="btn-action" onclick="rotateLeft()" title="Rotate Left">↺ Left</button>
+                <button class="btn-action" onclick="rotateRight()" title="Rotate Right">↻ Right</button>
+                <button class="btn-action" onclick="flipHorizontal()">↔ Flip H</button>
+                <button class="btn-action" onclick="flipVertical()">↕ Flip V</button>
+                <button class="btn-action" onclick="cropper.zoom(0.1)">➕ In</button>
+                <button class="btn-action" onclick="cropper.zoom(-0.1)">➖ Out</button>
+                <button class="btn-action" onclick="resetEditor()"><i class="fas fa-undo me-2"></i> Reset </button>
+                <b href="/crop_rotate" class="btn-action">↺ New File</a>
+                <button href="/crop_rotate" class="btn-action">↺ New File</button> -->
+            <!-- </div> -->
+            <div class="button-grid">
+                <button class="btn-action" onclick="rotateLeft()"><i class="fas fa-undo"></i> Left</button>
+                <button class="btn-action" onclick="rotateRight()"><i class="fas fa-redo"></i> Right</button>
+                
+                <button class="btn-action" onclick="flipHorizontal()"><i class="fas fa-arrows-alt-h"></i> Flip H</button>
+                <button class="btn-action" onclick="flipVertical()"><i class="fas fa-arrows-alt-v"></i> Flip V</button>
+                
+                <button class="btn-action" onclick="cropper.zoom(0.1)"><i class="fas fa-search-plus"></i> In</button>
+                <button class="btn-action" onclick="cropper.zoom(-0.1)"><i class="fas fa-search-minus"></i> Out</button>
+    
+                <button class="btn-action btn-danger-outline" onclick="resetEditor()"><i class="fas fa-sync-alt"></i> Reset</button>
+                <button class="btn-action" onclick="location.reload()"><i class="fas fa-file"></i> New File</button>
+            </div>
+        </div>
+                
+        <button class="btn-tool btn-download" onclick="cropImage(this)">
+            <i class="fas fa-download me-2"></i> Save & Download
+        </button>
     </div>
 </div>
 
-
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white;">
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white;">
     <div class="spinner"></div>
-    <p style="margin-top: 15px; font-weight: 500;">Processing Image...</p>
+    <p style="margin-top: 15px; font-weight: 500; letter-spacing: 1px;">OPTIMIZING IMAGE...</p>
 </div>
 
 <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
-<script src="/static/script.js"></script>
-
+<script src="/static/croprotate.js"></script>
 {% endblock body %}

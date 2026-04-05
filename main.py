@@ -16,7 +16,7 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 def front():
     return render_template('switch.html')
 
-@app.route('/resizer', methods=['GET','POST'])
+@app.route('/resizer', methods=['GET', 'POST'])
 def resize_image():
     if request.method == 'POST':
         if 'image' not in request.files:
@@ -38,20 +38,21 @@ def resize_image():
         name, ext = os.path.splitext(filename)
         unique_name = f"resized_{int(time.time())}{ext}"
         output_path = os.path.join(OUTPUT_FOLDER, unique_name)
-
+        
         file.save(input_path)
-
         img = Image.open(input_path)
         resized = img.resize((width, height))
         resized.save(output_path)
 
-        # 👇 Image details
-        file_size = round(os.path.getsize(output_path) / 1024, 2)  # KB
-        resolution = resized.size  # (width, height)
+        file_size = round(os.path.getsize(output_path) / 1024, 2)
+        resolution = resized.size
 
-        return render_template('resize_result.html',filename=unique_name,
-                                file_size=file_size,resolution=resolution)
-    # 👉 GET request ke liye page load karo
+        # render_template ki jagah jsonify return karoy
+        return jsonify({
+            "filename": unique_name,
+            "file_size": file_size,
+            "resolution": resolution
+        })
     return render_template('resize.html')
          
 # Size function 
@@ -107,172 +108,146 @@ def compress_image():
         compressed_size = format_size(compressed_size_kb)
         reduction = round(((original_size_kb - compressed_size_kb) / original_size_kb) * 100, 2)
 
-        return render_template('compress_result.html',filename=unique_name,
-            original_size=original_size,compressed_size=compressed_size,
-            reduction=reduction
-        )
+        return jsonify({"filename": unique_name,"original_size": original_size,
+            "compressed_size": compressed_size,"reduction": reduction })
     return render_template('compress.html')
 
-@app.route('/convertor', methods=['GET','POST'])
+from flask import jsonify
+import uuid
+
+@app.route('/convertor', methods=['GET', 'POST'])
 def convert_image():
     if request.method == 'POST':
-
         files = request.files.getlist('image')
-        convert_type = request.form.get('type')  
+        convert_type = request.form.get('type')
 
         if not files or not convert_type:
-            return "Missing file or type", 400
+            return jsonify({"error": "Missing file or type"}), 400
 
         output_files = []
+        
+        # Mapping for regular image formats
+        format_map = {
+            'png-to-jpg': ('JPEG', 'jpg'),
+            'jpg-to-png': ('PNG', 'png'),
+            'to-webp': ('WEBP', 'webp'),
+            'to-bmp': ('BMP', 'bmp'),
+            'to-gif': ('GIF', 'gif'),
+            'pdf-to-jpg' : ('JPEG', 'jpg'),
+            'single_img_to_single_pdf': ('PDF', 'pdf')
+        }
 
+        # --- CASE 1: Multiple Images to ONE PDF ---
         if convert_type == "multi_img_to_single_pdf":
             image_list = []
-
             for file in files:
-                if file.filename == "": 
-                    continue
-
-                filename = file.filename
-                input_path = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(input_path)
-
-                img = Image.open(input_path)
-
-                if img.mode == "RGBA":
-                    img = img.convert("RGB")
-
+                img = Image.open(file)
+                if img.mode in ("RGBA", "P"): img = img.convert("RGB")
                 image_list.append(img)
             
-            if not image_list:
-                return "No valid images", 400
-
-            #single PDF banega
-            output_filename = f"converted_{int(time.time())}.pdf"
+            output_filename = f"merged_{int(time.time())}.pdf"
             output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-            image_list[0].save(output_path,save_all=True,append_images=image_list[1:])
-            output_files.append(output_filename)
+            image_list[0].save(output_path, save_all=True, append_images=image_list[1:])
+            output_files.append({"name": output_filename, "type": "PDF"})
 
-        else:
+        # --- CASE 2: PDF to Image (Fixing this part) ---
+        elif convert_type == "pdf-to-jpg":
             for file in files:
-                if file.filename == "":
+                # Pehle PDF file ko temp save karna padega convert_from_path ke liye
+                temp_input_path = os.path.join(UPLOAD_FOLDER, file.filename)
+                file.save(temp_input_path)
+                
+                try:
+                    # Poppler use karke PDF ki pehli page convert karein
+                    images = convert_from_path(temp_input_path)
+                    if images:
+                        unique_name = f"pdf_conv_{uuid.uuid4().hex[:8]}.jpg"
+                        output_path = os.path.join(OUTPUT_FOLDER, unique_name)
+                        images[0].save(output_path, "JPEG")
+                        output_files.append({"name": unique_name, "type": "JPG"})
+                except Exception as e:
+                    print(f"PDF Error: {e}")
                     continue
 
-                filename = file.filename
-                input_path = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(input_path)
+        # --- CASE 3: Normal Image Formats ---
+        else:
+            for file in files:
+                img = Image.open(file)
+                ext_info = format_map.get(convert_type)
                 
-                if convert_type == "pdf-to-img":
-                    try:
-                        images = convert_from_path(input_path)
-                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.jpg"
-                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                        images[0].save(output_path, "JPEG")
-                        output_files.append(output_filename)
-                    except Exception as e:
-                        return f"PDF Error: {e}", 500
-                else:
-                    img = Image.open(input_path)
-
-                    if convert_type == 'png-to-jpg':
-                        if img.mode in ("RGBA", "P"):
-                            img = img.convert("RGB")
-
-                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.jpg"
-                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                        img.save(output_path, "JPEG")
-
-                    elif convert_type == 'jpg-to-png':
-                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.png"
-                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                        img.save(output_path, "PNG")
-
-                    elif convert_type == "single_img_to_single_pdf":
-                        if img.mode == "RGBA":
-                            img = img.convert("RGB")
-
-                        output_filename = f"converted_{int(time.time())}-{uuid.uuid4()}.pdf"
-                        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-                        img.save(output_path, "PDF")
-                    else:
-                        continue
-
-                    output_files.append(output_filename)
-
-        if not output_files:
-            return "Processing failed", 400
-
-        file_type = output_files[0].split('.')[-1].upper()
+                if not ext_info: continue
                 
-        return render_template('convert_result.html', files=output_files,filename=output_files[0],file_type=file_type)
+                pill_format, extension = ext_info
+                # RGBA handling for formats that don't support it
+                if pill_format in ["JPEG", "PDF", "BMP"] and img.mode in ("RGBA", "P"):
+                    img = img.convert("RGB")
+
+                unique_name = f"conv_{uuid.uuid4().hex[:8]}.{extension}"
+                output_path = os.path.join(OUTPUT_FOLDER, unique_name)
+                img.save(output_path, pill_format)
+                output_files.append({"name": unique_name, "type": extension.upper()})
+
+        return jsonify({"files": output_files})
+
     return render_template('convert.html')
 
-@app.route('/pdf_tool', methods=['GET','POST'])
-def merge_pdf():
+@app.route('/pdf_tool', methods=['GET', 'POST'])
+def pdf_tool():
     if request.method == 'POST':
         files = request.files.getlist('pdfs')
         pdf_type = request.form.get('type')
-        page = request.form.get('page')
+        page_val = request.form.get('page')
+        password = request.form.get('password') # Naya Feature
 
         if not files or not pdf_type:
-            return "Missing file or type", 400
+            return jsonify({"error": "Missing file or type"}), 400
 
-        total_pages = None
+        output_filename = f"pdf_{int(time.time())}_{uuid.uuid4().hex[:5]}.pdf"
+        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
 
-        if pdf_type == "merge-pdf":
-            merger = PdfMerger()
+        try:
+            # --- MERGE LOGIC ---
+            if pdf_type == "merge-pdf":
+                merger = PdfMerger()
+                for file in files:
+                    merger.append(file)
+                merger.write(output_path)
+                merger.close()
 
-            output_filename = f"merged_{int(time.time())}-{uuid.uuid4()}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-
-            for file in files:
-                merger.append(file)
-
-            merger.write(output_path)
-            merger.close()
-
-        elif pdf_type == "split-pdf":
-            file = files[0]
-            reader = PdfReader(file)
-            total_pages = len(reader.pages)
-
-            if not page:
-                return "Page number required for split", 400
-            
-            writer = PdfWriter()
-
-            if '-' in page:
-                try:
-                    start, end = map(int, page.split('-'))
-                except:
-                    return "Invalid range format", 400
-                start -= 1
-                end -= 1
-
-                if start < 0 or end >= total_pages or start > end:
-                    return f"Invalid page (Total pages: {total_pages})", 400
+            # --- SPLIT LOGIC ---
+            elif pdf_type == "split-pdf":
+                reader = PdfReader(files[0])
+                writer = PdfWriter()
                 
-                for i in range(start, end + 1):
-                    writer.add_page(reader.pages[i])
-            else:
-                try:
-                    page_num = int(page) - 1
-                except:
-                    return "Invalid page number", 400
+                # Range logic (e.g. 1-5 or 3)
+                if '-' in page_val:
+                    start, end = map(int, page_val.split('-'))
+                    for i in range(start-1, min(end, len(reader.pages))):
+                        writer.add_page(reader.pages[i])
+                else:
+                    writer.add_page(reader.pages[int(page_val)-1])
                 
-                if page_num < 0 or page_num >= total_pages:
-                    return f"Invalid page (Total pages: {total_pages})", 400
+                with open(output_path, "wb") as f:
+                    writer.write(f)
 
-                writer.add_page(reader.pages[page_num])
-                
-            output_filename = f"splited_{int(time.time())}-{uuid.uuid4()}.pdf"
-            output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+            # --- PASSWORD PROTECTION (Naya Feature) ---
+            elif pdf_type == "lock-pdf":
+                reader = PdfReader(files[0])
+                writer = PdfWriter()
+                for page in reader.pages:
+                    writer.add_page(page)
+                writer.encrypt(password)
+                with open(output_path, "wb") as f:
+                    writer.write(f)
 
-            with open(output_path, "wb") as f:
-                writer.write(f)
+            return jsonify({
+                "filename": output_filename,
+                "type": "PDF"
+            })
 
-        return render_template('pdftool_result.html',files=[output_filename],
-                               file_type="PDF",filename=output_filename
-                               )
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
     return render_template('pdftool.html')
 
 # Upload Original Image

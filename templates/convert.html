@@ -1,161 +1,68 @@
 {% extends 'base.html' %}
 {% block head %}
-    <style>
-        :root {
-            --primary-glow: #007bff;
-            --accent: #00d4ff;
-        }
-        body {
-            /* removal */
-            /* background: 
-            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  
-            url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');  */
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            align-items: center;
-        }
-        /* Container Resizer */
-        .convertor-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff; /* Neumorphic Shadow */
-            width: 100%;
-            max-width: 450px;
-            margin-top: 50px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .convertor-card h2 {
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        /* Style for File Input */
-        .file-input-wrapper {
-            background: #eef1f6;
-            padding: 50px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px dashed #007bff;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .file-input-wrapper:hover {
-            background: #e0e7ff;
-        }
-        /* Modern Input Fields */
-        .format-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px; /* Buttons ke beech gap */
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .format-buttons label {
-            padding: 10px 25px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.05), 
-                        -4px -4px 10px rgba(255, 255, 255, 0.8);  
-            font-weight: 500;
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none; 
-        }
-        /* Hover Effect: Jab mouse upar aaye */
-        .format-buttons label:hover {
-            background: #db7575;
-            transform: translateY(-3px); 
-            box-shadow: 0 10px 15px rgba(0, 123, 255, 0.1);
-            color: #007bff;
-            border-color: rgba(0, 123, 255, 0.2);
-        }
-        .format-buttons input:checked + label {
-            background: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-        .format-buttons input {   /*hide check box*/
-            display: none;
-        } 
-        /* Glowing Button */
-        .convert-btn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #007bff, #00d4ff);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .convert-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
-        }
-        .convert-btn:active {
-            transform: scale(0.98);
-        }
-    </style>
+    <link rel="stylesheet" href="../static/convert.css">
 {% endblock head %}
-{% block body %}  
 
-<div class="convertor-card">
-    <form action="/convertor" method="post" enctype="multipart/form-data">
-        <h2>Image Convertor</h2>
-        
-        <div class="file-input-wrapper">
-            <label >You can select multipal Images</label><br>
-            <input  type="file" id="fileInput" name="image" multiple required ><br> 
+{% block body %}
+<div class="convertor-wrapper">
+    <div class="main-card">
+        <div class="section-title text-center mb-4">
+            <h2 style="font-family: 'Montserrat'; font-weight: 800;">Universal Convertor</h2>
+            <p style="color: #94a3b8;">Transform your images into any format in seconds.</p>
         </div>
 
-        <p id="fileType" style="font-weight:bold; color:rgb(49, 49, 55);"></p>
+        <form id="convertForm">
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-file-export fa-3x mb-3" style="color: var(--secondary);"></i>
+                <h4 id="fileLabel">Select Multiple Images</h4>
+                <p style="font-size: 0.8rem; color: #64748b;">JPG, PNG, WebP, GIF supported</p>
+                <input type="file" id="fileInput" name="image" accept="image/*, .png, .pdf, .WebP, .GIF .docx, .txt" hidden multiple required>
+            </div>
 
-        <div class="format-buttons">
-            <input type="radio"id="png" name="type" value="png-to-jpg" required>
-            <label for="png">JPG</label>
+            <h5 class="mb-3">Select Output Format:</h5>
+            <div class="format-grid">
+                <div class="format-option">
+                    <input type="radio" id="f1" name="type" value="png-to-jpg" checked>
+                    <label for="f1">JPG</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f2" name="type" value="jpg-to-png">
+                    <label for="f2">PNG</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f3" name="type" value="to-webp">
+                    <label for="f3">WebP</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f4" name="type" value="single_img_to_single_pdf">
+                    <label for="f4">Seperate PDF</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f5" name="type" value="multi_img_to_single_pdf">
+                    <label for="f5">Merge PDF</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f6" name="type" value="pdf-to-jpg">
+                    <label for="f6">PDF→JPG</label>
+                </div>
+                <div class="format-option">
+                    <input type="radio" id="f7" name="type" value="to-gif">
+                    <label for="f7">GIF</label>
+                </div>
+            </div>
 
-            <input type="radio" id="jpg" name="type" value="jpg-to-png">
-            <label for="jpg">PNG</label><br>
+            <button type="submit" class="convert-btn" id="submitBtn">Convert Files</button>
+        </form>
 
-            <input type="radio" id="pdf1" name="type" value="single_img_to_single_pdf">
-            <label for="pdf1">Seperate PDF</label>
-            
-            <input type="radio" id="pdf" name="type" value="multi_img_to_single_pdf">
-            <label for="pdf">Merged PDF</label><br>
-
-            <input type="radio" id="img" name="type" value="pdf-to-img">
-            <label for="img">PDF To Image</label>
+        <div id="resultArea">
+            <h4 class="mb-3">✅ Conversion Complete</h4>
+            <div id="fileList"></div>
+            <div class="btn-reset mt-4">
+                <a href="/convertor" style="color: var(--secondary); text-decoration: none;">↺ Convert More Files</a>
+            </div>
         </div>
-
-        <button class="convert-btn" type="submit">Convert Image</button>
-    </form>
+    </div>
 </div>
 
-<script>
-    document.getElementById("fileInput").addEventListener("change", function () {
-        const file = this.files[0]; 
-
-        if (file) {
-            const ext = file.name.split('.').pop().toUpperCase();
-
-            const mime = file.type;
-            document.getElementById("fileType").innerText =
-                "File Type : " + ext + " ";
-        }
-    });
-</script>
+<script src="/static/convert.js" ></script>
 {% endblock body %}
