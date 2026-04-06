@@ -53,7 +53,7 @@ def resize_image():
             "file_size": file_size,
             "resolution": resolution
         })
-    return render_template('resize.html')
+    return render_template('01_resize.html')
          
 # Size function 
 def format_size(size_kb):
@@ -110,7 +110,7 @@ def compress_image():
 
         return jsonify({"filename": unique_name,"original_size": original_size,
             "compressed_size": compressed_size,"reduction": reduction })
-    return render_template('compress.html')
+    return render_template('02_compress.html')
 
 from flask import jsonify
 import uuid
@@ -189,7 +189,7 @@ def convert_image():
 
         return jsonify({"files": output_files})
 
-    return render_template('convert.html')
+    return render_template('03_convert.html')
 
 @app.route('/pdf_tool', methods=['GET', 'POST'])
 def pdf_tool():
@@ -248,7 +248,7 @@ def pdf_tool():
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    return render_template('pdftool.html')
+    return render_template('04_pdftool.html')
 
 # Upload Original Image
 @app.route('/upload', methods=['POST'])
@@ -279,7 +279,7 @@ def crop_rotate():
         img.save(path, "JPEG", quality=95)
 
         return jsonify({"filename": filename})
-    return render_template('croprotate.html')
+    return render_template('05_croprotate.html')
 
 # # 🔽 download route
 @app.route('/outputs/<filename>')
@@ -291,7 +291,7 @@ def download_file(filename):
     return send_from_directory(OUTPUT_FOLDER, filename,as_attachment=True)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-    # app.run(debug=True)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
      

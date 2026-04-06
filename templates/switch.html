@@ -42,7 +42,7 @@
 
         <div class="card">
             <div class="icon-circle">✂️</div>
-            <h3>Crop & Edit</h3>
+            <h3>Crop & Rotate</h3>
             <p>Quickly trim, rotate, and flip your photos with our intuitive editor.</p>
             <a href="/crop_rotate" class="btn">Launch Tool</a>
         </div>
@@ -73,3 +73,45 @@
         </div>
     </div>
 {% endblock body %}
+{% block footer_grid %}
+    <div class="footer-grid">
+        <div class="footer-section footer-brand">
+            <h2>ALL ARE HERE</h2>
+            <p>High-quality web tools for creators and developers. Fast, secure, and always free.</p>
+            <div class="social-icons mt-3">
+                <a href="https://github.com/deepak-1252-git"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.instagram.com/mr_deepak1252"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Tools</h4>
+            <ul class="footer-links">
+                <li><a href="/resizer">Image Resizer</a></li>
+                <li><a href="/compressor">Image Compressor</a></li>
+                <li><a href="/convertor">Format Converter</a></li>
+                <li><a href="/pdf_tool">PDF Master</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h4>Support</h4>
+            <ul class="footer-links">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Use</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section newsletter">
+            <h4>Stay Updated</h4>
+            <p>Get notified when we launch new tools.</p>
+            <form>
+                <input type="email" placeholder="Your email address">
+                <button class="btn-subscribe">Subscribe</button>
+            </form>
+        </div>
+    </div>
+{% endblock footer_grid %}

@@ -2,7 +2,7 @@
 {% block head %}
 <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css">
 
-<link rel="stylesheet" href="../static/croprotate.css">
+<link rel="stylesheet" href="../static/05_croprotate.css">
 {% endblock head %}
 
 {% block body %}
@@ -15,17 +15,17 @@
         <h3>Photo Editor</h3>
         
         <div>
-            <label class="tool-label">Import Image</label>
             <label for="inputImage" class="custom-file-upload w-100">
-                <i class="fas fa-upload me-2"></i> Choose File
+                <i class="fas fa-upload"></i> 
+                <span class="d-none d-md-inline">Choose File / Drag & Drop</span>
+                <span class="d-inline d-md-none">Upload Image</span>
             </label>
             <input type="file" id="inputImage" hidden>
         </div>
 
         <div>
-            <label class="tool-label">Aspect Ratio</label>
             <select id="aspectRatio" onchange="setAspectRatio(this.value)">
-                <option value="NaN">Free Style</option>
+                <option value="NaN">Free Style/Aspect Ratio</option>
                 <option value="1">1:1 Square</option>
                 <option value="1.777">16:9 YouTube</option>
                 <option value="0.562">9:16 Reels/TikTok</option>
@@ -35,17 +35,6 @@
 
         <div>
             <label class="tool-label">Transform Tools</label>
-            <!-- <div class="button-grid">
-                <button class="btn-action" onclick="rotateLeft()" title="Rotate Left">↺ Left</button>
-                <button class="btn-action" onclick="rotateRight()" title="Rotate Right">↻ Right</button>
-                <button class="btn-action" onclick="flipHorizontal()">↔ Flip H</button>
-                <button class="btn-action" onclick="flipVertical()">↕ Flip V</button>
-                <button class="btn-action" onclick="cropper.zoom(0.1)">➕ In</button>
-                <button class="btn-action" onclick="cropper.zoom(-0.1)">➖ Out</button>
-                <button class="btn-action" onclick="resetEditor()"><i class="fas fa-undo me-2"></i> Reset </button>
-                <b href="/crop_rotate" class="btn-action">↺ New File</a>
-                <button href="/crop_rotate" class="btn-action">↺ New File</button> -->
-            <!-- </div> -->
             <div class="button-grid">
                 <button class="btn-action" onclick="rotateLeft()"><i class="fas fa-undo"></i> Left</button>
                 <button class="btn-action" onclick="rotateRight()"><i class="fas fa-redo"></i> Right</button>
@@ -57,7 +46,7 @@
                 <button class="btn-action" onclick="cropper.zoom(-0.1)"><i class="fas fa-search-minus"></i> Out</button>
     
                 <button class="btn-action btn-danger-outline" onclick="resetEditor()"><i class="fas fa-sync-alt"></i> Reset</button>
-                <button class="btn-action" onclick="location.reload()"><i class="fas fa-file"></i> New File</button>
+                <button class="btn-action btn-danger-outline" onclick="location.reload()"><i class="fas fa-file"></i> New File</button>
             </div>
         </div>
                 
@@ -73,5 +62,5 @@
 </div>
 
 <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
-<script src="/static/croprotate.js"></script>
+<script src="/static/05_croprotate.js"></script>
 {% endblock body %}

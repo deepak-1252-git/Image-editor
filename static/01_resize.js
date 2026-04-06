@@ -62,3 +62,31 @@ uploadForm.onsubmit = async (e) => {
     btnText.innerText = "Process & Resize";
     btn.disabled = false;
 };
+
+const uploadBox = document.querySelector('.upload-box');
+
+// 1. Jab file box ke upar ho
+uploadBox.addEventListener('dragover', (e) => {
+    e.preventDefault(); // Default open file behavior roko
+    uploadBox.classList.add('drag-over');
+});
+
+// 2. Jab mouse box se bahar chala jaye
+uploadBox.addEventListener('dragleave', () => {
+    uploadBox.classList.remove('drag-over');
+});
+
+// 3. Jab file DROP ho jaye
+uploadBox.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadBox.classList.remove('drag-over');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files; // Input field ko drop ki hui files assign karo
+        
+        // Manual change event trigger karo taaki aapka purana logic (width/height pre-fill) chal sake
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+    }
+});

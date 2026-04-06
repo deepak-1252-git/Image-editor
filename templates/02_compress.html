@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-    <link rel="stylesheet" href="../static/compress.css">
+    <link rel="stylesheet" href="../static/02_compress.css">
 {% endblock head %}
 
 {% block body %}
@@ -14,7 +14,7 @@
         <form id="compressForm">
             <div class="upload-box" onclick="document.getElementById('imageInput').click()">
                 <i class="fas fa-file-image"></i>
-                <h4 id="fileLabel">Drop your image here</h4>
+                <h4 id="fileLabel">Choose Image or Drag & Drop</h4>
                 <p id="fileSizeInfo" style="color: var(--secondary); font-size: 0.9rem; margin: 0;"></p>
                 <input type="file" id="imageInput" name="image" accept="image/*" hidden required>
             </div>
@@ -60,5 +60,5 @@
     </div>
 </div>
 
-<script src="/static/compress.js" ></script> 
+<script src="/static/02_compress.js" ></script> 
 {% endblock body %}

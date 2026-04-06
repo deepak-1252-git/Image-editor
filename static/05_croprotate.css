@@ -8,9 +8,9 @@
 .editor-wrapper {
     display: flex;
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
     /* Navbar height minus */
-    gap: 20px;
+    gap: 10px;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -44,7 +44,7 @@
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 8px;
     min-width: 320px;
     color: white;
 }
@@ -62,13 +62,13 @@
 .custom-file-upload {
     border: 1px dashed var(--border);
     display: inline-block;
-    padding: 15px;
+    padding: 12px;
     cursor: pointer;
     border-radius: 12px;
     text-align: center;
     background: rgba(255, 255, 255, 0.02);
     transition: 0.3s;
-    
+
 }
 
 .custom-file-upload:hover {
@@ -79,14 +79,14 @@
     margin-top: 1;
     font-size: 0.8rem;
     color: #94a3b8;
-    /* margin-bottom: 5px; */
+    margin-bottom: 5px;
     display: block;
 }
 
 select,
 .btn-tool {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
     border: 1px solid var(--border);
     background: rgba(0, 0, 0, 0.3);
@@ -99,16 +99,19 @@ select,
 /* Better Grid Alignment */
 .button-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Do barabar columns */
-    gap: 12px; /* Thoda zyada gap clean dikhta hai */
-    margin-top: 5px;
+    grid-template-columns: 1fr 1fr;
+    /* Do barabar columns */
+    gap: 10px;
+    /* Thoda zyada gap clean dikhta hai */
+    margin-top: 4px;
 }
 
 .btn-action {
     background: var(--glass) !important;
     border: 1px solid var(--border) !important;
     color: white;
-    padding: 10px 5px !important; /* Fixed padding */
+    padding: 10px 5px !important;
+    /* Fixed padding */
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 500;
@@ -118,8 +121,10 @@ select,
     align-items: center;
     justify-content: center;
     gap: 8px;
-    width: 100%; /* Column ki poori width lega */
-    min-height: 45px; /* Sab buttons ki height ek jaisi rahegi */
+    width: 100%;
+    /* Column ki poori width lega */
+    min-height: 45px;
+    /* Sab buttons ki height ek jaisi rahegi */
 }
 
 .btn-action:hover {
@@ -139,6 +144,7 @@ select,
 .btn-danger-outline {
     border-color: rgba(239, 68, 68, 0.3) !important;
 }
+
 .btn-danger-outline:hover {
     background: rgba(239, 68, 68, 0.2) !important;
     border-color: #ef4444 !important;
@@ -158,4 +164,72 @@ select,
 #loadingOverlay {
     background: rgba(15, 23, 42, 0.8) !important;
     backdrop-filter: blur(10px);
+}
+
+/* Drag and Drop Active State */
+.image-box.drag-over {
+    border-color: var(--secondary) !important;
+    background: rgba(0, 212, 255, 0.1) !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+/* Responsive Mobile Styles */
+@media (max-width: 992px) {
+    .editor-wrapper {
+        flex-direction: column;
+        /* Side-by-side se hatkar upar-niche ho jayega */
+        height: auto;
+        /* Fixed height hatani padegi scroll ke liye */
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .image-box {
+        flex: none;
+        width: 100%;
+        height: 50vh;
+        /* Phone par image ko limited height dena zaroori hai */
+        min-height: 300px;
+    }
+
+    .control-section {
+        flex: none;
+        width: 100%;
+        min-width: unset;
+        /* Fixed width remove karein */
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        /* Footer se thoda gap */
+    }
+
+    .control-section h3 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    /* Mobile par buttons ko 2 columns se 3 columns bhi kar sakte hain agar space kam lage */
+    .button-grid {
+        grid-template-columns: 1fr 1fr;
+        /* Aap 1fr 1fr 1fr bhi kar sakte hain small phone ke liye */
+    }
+}
+
+/* Extra Small Phones (Portrait) */
+@media (max-width: 480px) {
+    .image-box {
+        height: 40vh;
+    }
+
+    .btn-action {
+        font-size: 0.75rem;
+        /* Text chota karein taaki icons ke saath fit ho sake */
+        padding: 8px 2px !important;
+    }
+
+    .control-section {
+        gap: 15px;
+        /* Thoda tight spacing */
+    }
 }

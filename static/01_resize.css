@@ -179,3 +179,11 @@
     text-decoration: none;
     border-radius: 12px;
 }
+
+/* Drag and Drop Active State */
+.upload-box.drag-over {
+    border-color: var(--secondary) !important;
+    background: rgba(0, 212, 255, 0.1) !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}

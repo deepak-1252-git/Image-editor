@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-    <link rel="stylesheet" href="../static/convert.css">
+    <link rel="stylesheet" href="../static/03_convert.css">
 {% endblock head %}
 
 {% block body %}
@@ -14,7 +14,7 @@
         <form id="convertForm">
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-file-export fa-3x mb-3" style="color: var(--secondary);"></i>
-                <h4 id="fileLabel">Select Multiple Images</h4>
+                <h4 id="fileLabel">Select Multiple Images or Drag & Drop</h4>
                 <p style="font-size: 0.8rem; color: #64748b;">JPG, PNG, WebP, GIF supported</p>
                 <input type="file" id="fileInput" name="image" accept="image/*, .png, .pdf, .WebP, .GIF .docx, .txt" hidden multiple required>
             </div>
@@ -64,5 +64,5 @@
     </div>
 </div>
 
-<script src="/static/convert.js" ></script>
+<script src="/static/03_convert.js" ></script>
 {% endblock body %}
