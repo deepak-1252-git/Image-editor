@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block head %}
+    <link rel="stylesheet" href="../static/06_videotrim.css">
+{% endblock head %}
+
+{% block body %}
+<div class="editor-container">
+    <div class="video-main">
+        <div class="video-screen">
+            <video id="vPlayer" controls></video>
+            <div id="no-video" style="color: #475569;"></div>
+        </div>
+        
+        <div class="mt-4">
+            <input type="range" id="vSeeker" class="seek-slider" min="0" step="0.1" value="0">
+            <div class="d-flex justify-content-between mt-2" style="font-family: monospace; font-size: 0.9rem;">
+                <span id="curTime">00:00</span>
+                <span id="totTime">00:00</span>
+            </div>  
+        </div>
+    </div>
+    
+    <div class="control-video-sidebar">
+        <h3>Editor Controls</h3>
+        
+        <div class="control-group">
+            <label>1. Select Video</label>
+            <div class="file-drop" onclick="document.getElementById('vFile').click()">
+                <i class="fas fa-file-video mb-2"></i>
+                <div id="vName" style="font-size: 0.8rem;">Upload Video</div>
+                <input type="file" id="vFile" name="video" accept="video/*" hidden required>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>2. Trim Range (Seconds)</label>
+            <div class="d-flex gap-2">
+                <input type="number" id="vStart" class="v-input" value="0" placeholder="Start">
+                <input type="number" id="vEnd" class="v-input" placeholder="End">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>3. Audio Settings</label>
+            <label class="mute-box">
+                <input type="checkbox" id="vMute">
+                <span style="font-size: 0.9rem;">Mute Audio</span>
+            </label>
+        </div>
+
+        <button class="btn-render" id="renderBtn">Render & Download</button>
+    </div>
+</div>
+
+<div id="overlay">
+    <div class="spinner-border text-primary mb-3"></div>
+    <p>Processing Video... Please wait.</p>
+</div>
+
+<script src="/static/06_videotrim.js" ></script>
+ 
+{% endblock body %}

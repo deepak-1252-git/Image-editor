@@ -1,0 +1,216 @@
+:root {
+    --v-accent: #6366f1;
+    --v-accent-glow: rgba(99, 102, 241, 0.4);
+    --v-glass: rgba(255, 255, 255, 0.05);
+    --v-border: rgba(255, 255, 255, 0.1);
+    --v-bg: #0f172a;
+}
+
+.editor-container {
+    display: flex;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* LEFT SIDE: Large Video Preview */
+.video-main {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 28px;
+    border: 1px solid var(--v-border);
+    padding: 25px;
+    position: relative;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
+}
+
+.video-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+video {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+/* RIGHT SIDE: Controls (Exact Crop-Rotate Style) */
+.control-video-sidebar {
+   flex: 1;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 30px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 320px;
+    color: white;
+}
+
+.control-video-sidebar h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    margin-top: 1px;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;   
+}
+
+/* Control Groups & Inputs */
+.control-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.file-drop {
+    border: 2px dashed var(--v-border);
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.file-drop:hover {
+    border-color: var(--v-accent);
+    background: rgba(99, 102, 241, 0.08);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.v-input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--v-border);
+    border-radius: 14px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: 0.3s;
+}
+
+.v-input:focus {
+    border-color: var(--v-accent);
+    box-shadow: 0 0 20px var(--v-accent-glow);
+}
+
+/* Stylish Mute Box */
+.mute-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--v-border);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.mute-box:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--v-accent);
+}
+
+.mute-box input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--v-accent);
+}
+
+/* Action Button (The "Save" Button) */
+.btn-render {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: auto;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
+}
+
+.btn-render:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(99, 102, 241, 0.5);
+}
+
+.btn-render:active {
+    transform: scale(0.97);
+}
+
+/* Overlay & Seeker Fixes */
+.seek-slider {
+    width: 100%;
+    height: 8px;
+    accent-color: var(--v-accent);
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner-border {
+    width: 4rem; height: 4rem;
+    border-width: 0.4em;
+    color: var(--v-accent) !important;
+}
+
+/* Drag and Drop Active State */
+.video-main.drag-over {
+    border-color: var(--secondary) !important;
+    background: rgba(0, 212, 255, 0.1) !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+/* Mobile Fix (Jo humne pehle discuss kiya tha) */
+@media (max-width: 992px) {
+    .editor-container {
+        flex-direction: column;
+        height: auto;
+        overflow-y: auto;
+    }
+    .video-main { height: 400px; flex: none; }
+    .control-video-sidebar { flex: none; width: 100%; max-width: 100%; }
+}
+
+
+ 

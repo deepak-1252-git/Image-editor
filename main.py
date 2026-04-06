@@ -2,6 +2,7 @@ from flask import Flask, request ,render_template,send_from_directory,jsonify
 from PIL import Image
 from pdf2image import convert_from_path
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+from moviepy import VideoFileClip
 import os, time, uuid
   
 app = Flask(__name__)
@@ -281,6 +282,55 @@ def crop_rotate():
         return jsonify({"filename": filename})
     return render_template('05_croprotate.html')
 
+@app.route('/video_trim', methods=['GET', 'POST'])
+def video_trim():
+    if request.method == 'POST':
+        # Check if file exists
+        if 'video' not in request.files:
+            return jsonify({"error": "No video file uploaded"}), 400
+            
+        file = request.files['video']
+        start_time = float(request.form.get('start', 0))
+        end_time = float(request.form.get('end', 0))
+        # JavaScript se 'true' string aayegi
+        remove_audio = request.form.get('remove_audio') == 'true'
+
+        if file.filename == '':
+            return jsonify({"error": "Empty filename"}), 400
+
+        unique_id = uuid.uuid4().hex[:8]
+        input_filename = f"temp_{unique_id}_{file.filename}"
+        output_filename = f"trimmed_{unique_id}.mp4"
+        
+        input_path = os.path.join(UPLOAD_FOLDER, input_filename)
+        output_path = os.path.join(OUTPUT_FOLDER, output_filename)
+        
+        file.save(input_path)
+
+        try:
+            # from moviepy import VideoFileClip
+            with VideoFileClip(input_path) as video:
+                # Use subclipped (v2.0) 
+                if hasattr(video, 'subclipped'):
+                    new_video = video.subclipped(start_time, end_time)
+                else:
+                    new_video = video.subclip(start_time, end_time)
+                
+                if remove_audio:
+                    new_video = new_video.without_audio()
+                
+                new_video.write_videofile(output_path, codec="libx264", audio_codec="aac")
+            
+            return jsonify({"filename": output_filename})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        finally:
+            # Cleanup temp input file
+            if os.path.exists(input_path):
+                os.remove(input_path)
+
+    return render_template('06_videotrim.html')
+
 # # 🔽 download route
 @app.route('/outputs/<filename>')
 def get_output_file(filename):
@@ -291,7 +341,7 @@ def download_file(filename):
     return send_from_directory(OUTPUT_FOLDER, filename,as_attachment=True)
 
 if __name__ == "__main__":
-    # port = int(os.environ.get("PORT", 5000))
-    # app.run(host="0.0.0.0", port=port)
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    # app.run(debug=True)
      
