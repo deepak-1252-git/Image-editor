@@ -1,4 +1,5 @@
 :root {
+    --primary: #6366f1;
     --v-accent: #6366f1;
     --v-accent-glow: rgba(99, 102, 241, 0.4);
     --v-glass: rgba(255, 255, 255, 0.05);
@@ -8,9 +9,9 @@
 
 .editor-container {
     display: flex;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
     overflow: hidden;
-    gap: 20px;
+    gap: 10px;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -21,9 +22,8 @@
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.4);
-    border-radius: 28px;
+    border-radius: 24px;
     border: 1px solid var(--v-border);
-    padding: 25px;
     position: relative;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
 }
@@ -104,7 +104,8 @@ video {
     border: 1px solid var(--v-border);
     border-radius: 14px;
     color: white;
-    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    /* font-family: 'Poppins', sans-serif; */
     outline: none;
     transition: 0.3s;
 }
@@ -114,72 +115,63 @@ video {
     box-shadow: 0 0 20px var(--v-accent-glow);
 }
 
-/* Stylish Mute Box */
-.mute-box {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 18px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--v-border);
-    border-radius: 18px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.mute-box:hover {
-    background: rgba(255, 255, 255, 0.07);
+.v-input:hover {
     border-color: var(--v-accent);
 }
 
-.mute-box input[type="checkbox"] {
+.v-input input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: var(--v-accent);
 }
 
 /* Action Button (The "Save" Button) */
-.btn-render {
+.btn-tool {
     width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.3);
     color: white;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    border: none !important;
+    font-weight: 700;
     margin-top: auto;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.3);
+    padding: 15px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.btn-render:hover {
+.btn-download:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(99, 102, 241, 0.5);
 }
-
-.btn-render:active {
+.btn-download:active {
     transform: scale(0.97);
 }
 
 /* Overlay & Seeker Fixes */
 .seek-slider {
-    width: 100%;
-    height: 8px;
+    width: 90%;
+    height: 6px;
     accent-color: var(--v-accent);
-    background: rgba(255,255,255,0.1);
+    background: rgba(253, 253, 253, 0.1);
     border-radius: 10px;
     cursor: pointer;
 }
+
 
 #overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.95);
+    background: var(--glass);
     backdrop-filter: blur(15px);
     z-index: 9999;
     flex-direction: column;
@@ -211,6 +203,5 @@ video {
     .video-main { height: 400px; flex: none; }
     .control-video-sidebar { flex: none; width: 100%; max-width: 100%; }
 }
-
 
  

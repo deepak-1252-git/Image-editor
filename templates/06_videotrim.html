@@ -7,8 +7,8 @@
 <div class="editor-container">
     <div class="video-main">
         <div class="video-screen">
-            <video id="vPlayer" controls></video>
-            <div id="no-video" style="color: #475569;"></div>
+            <video id="vPlayer" controls ></video>
+            <div id="no-video" style="color: #f8fbfe;"></div>
         </div>
         
         <div class="mt-4">
@@ -21,10 +21,9 @@
     </div>
     
     <div class="control-video-sidebar">
-        <h3>Editor Controls</h3>
+        <h3>Video Editor</h3>
         
         <div class="control-group">
-            <label>1. Select Video</label>
             <div class="file-drop" onclick="document.getElementById('vFile').click()">
                 <i class="fas fa-file-video mb-2"></i>
                 <div id="vName" style="font-size: 0.8rem;">Upload Video</div>
@@ -33,7 +32,7 @@
         </div>
 
         <div class="control-group">
-            <label>2. Trim Range (Seconds)</label>
+            <label>:) Trim Range (Seconds)</label>
             <div class="d-flex gap-2">
                 <input type="number" id="vStart" class="v-input" value="0" placeholder="Start">
                 <input type="number" id="vEnd" class="v-input" placeholder="End">
@@ -41,14 +40,39 @@
         </div>
 
         <div class="control-group">
-            <label>3. Audio Settings</label>
-            <label class="mute-box">
-                <input type="checkbox" id="vMute">
-                <span style="font-size: 0.9rem;">Mute Audio</span>
-            </label>
+            <label>:)  Filter & Speed</label>
+            <div class="d-flex gap-2">
+                <select id="vSpeed" name="speed" class="v-input">
+                    <option value="0.5">0.5x (Slow Motion)</option>
+                    <option value="1.0" selected>1.0x (Normal)</option>
+                    <option value="1.5">1.5x (Fast)</option>
+                    <option value="2.0">2.0x (Very Fast)</option>
+                </select>
+                <select id="vFilter" name="filter" class="v-input">
+                    <option value="none">Original</option>
+                    <option value="bw">Black & White</option>
+                    <option value="sepia">Vintage Sepia</option>
+                </select>
+            </div>  
         </div>
 
-        <button class="btn-render" id="renderBtn">Render & Download</button>
+        <div class="control-group">
+            <label>:) Formate & Audio  </label>
+            <div class="d-flex gap-2">
+                <select id="vFormat" name="format" class="v-input">
+                    <option value="mp4">Video (MP4)</option>
+                    <option value="gif">Animated GIF</option>
+                </select>
+                <label class="v-input">
+                    <input type="checkbox" id="vMute">
+                    <span style="font-size: 0.75rem;">Mute Audio</span>
+                </label>
+            </div>
+        </div>
+
+        <button id="renderBtn" class="btn-tool btn-download" onclick="cropImage(this)">
+            <i class="fas fa-download me-2"></i> Save & Download
+        </button>
     </div>
 </div>
 
@@ -56,6 +80,7 @@
     <div class="spinner-border text-primary mb-3"></div>
     <p>Processing Video... Please wait.</p>
 </div>
+
 
 <script src="/static/06_videotrim.js" ></script>
  

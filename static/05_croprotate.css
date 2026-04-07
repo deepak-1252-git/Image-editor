@@ -160,6 +160,13 @@ select,
     letter-spacing: 1px;
 }
 
+.btn-download:hover {
+    transform: translateY(-5px);
+}
+.btn-download:active {
+    transform: scale(0.97);
+}
+
 /* Loading Overlay Glass */
 #loadingOverlay {
     background: rgba(15, 23, 42, 0.8) !important;

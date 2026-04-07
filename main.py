@@ -2,9 +2,10 @@ from flask import Flask, request ,render_template,send_from_directory,jsonify
 from PIL import Image
 from pdf2image import convert_from_path
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
-from moviepy import VideoFileClip
+from moviepy import VideoFileClip                   
+from moviepy.video.fx import MultiplySpeed, BlackAndWhite
 import os, time, uuid
-  
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "/tmp"
@@ -282,53 +283,71 @@ def crop_rotate():
         return jsonify({"filename": filename})
     return render_template('05_croprotate.html')
 
+def apply_sepia(clip):
+    # Sepia matrix constants
+    def filter(image):
+        import numpy as np
+        # RGB to Sepia conversion formula
+        sepia_filter = np.array([[0.393, 0.769, 0.189],
+                                 [0.349, 0.686, 0.168],
+                                 [0.272, 0.534, 0.131]])
+        sepia_img = image.dot(sepia_filter.T)
+        sepia_img /= sepia_img.max()
+        return (sepia_img * 255).astype(np.uint8)
+    
+    return clip.image_transform(filter)
+
 @app.route('/video_trim', methods=['GET', 'POST'])
 def video_trim():
-    if request.method == 'POST':
-        # Check if file exists
-        if 'video' not in request.files:
-            return jsonify({"error": "No video file uploaded"}), 400
-            
-        file = request.files['video']
+    if request.method == "POST":    
+        file = request.files.get('video')
         start_time = float(request.form.get('start', 0))
         end_time = float(request.form.get('end', 0))
-        # JavaScript se 'true' string aayegi
         remove_audio = request.form.get('remove_audio') == 'true'
-
-        if file.filename == '':
-            return jsonify({"error": "Empty filename"}), 400
+        
+        # --- Naye Features ka Data ---
+        speed = float(request.form.get('speed', 1.0))
+        output_format = request.form.get('format', 'mp4') # mp4 ya gif
+        apply_filter = request.form.get('filter', 'none') # none, bw, sepia
 
         unique_id = uuid.uuid4().hex[:8]
-        input_filename = f"temp_{unique_id}_{file.filename}"
-        output_filename = f"trimmed_{unique_id}.mp4"
+        ext = 'gif' if output_format == 'gif' else 'mp4'
+        output_filename = f"edited_{unique_id}.{ext}"
         
-        input_path = os.path.join(UPLOAD_FOLDER, input_filename)
+        input_path = os.path.join(UPLOAD_FOLDER, f"temp_{unique_id}_{file.filename}")
         output_path = os.path.join(OUTPUT_FOLDER, output_filename)
-        
         file.save(input_path)
 
         try:
-            # from moviepy import VideoFileClip
             with VideoFileClip(input_path) as video:
-                # Use subclipped (v2.0) 
-                if hasattr(video, 'subclipped'):
-                    new_video = video.subclipped(start_time, end_time)
-                else:
-                    new_video = video.subclip(start_time, end_time)
+                # 1. Trim
+                new_video = video.subclipped(start_time, end_time) if hasattr(video, 'subclipped') else video.subclip(start_time, end_time)
                 
-                if remove_audio:
+                # 2. Speed Control (New Class)
+                if speed != 1.0:
+                    new_video = new_video.with_effects([MultiplySpeed(speed)])
+                
+                # 3. Filters
+                if apply_filter == 'bw':
+                    new_video = new_video.with_effects([BlackAndWhite()])
+                elif apply_filter == 'sepia':
+                    new_video = apply_sepia(new_video)
+
+                # 4. Audio/Mute
+                if remove_audio or output_format == 'gif':
                     new_video = new_video.without_audio()
+
+                # 5. Write Output
+                if output_format == 'gif':
+                    new_video.write_gif(output_path, fps=10) # GIF ke liye fps kam rakhte hain
+                else:
+                    new_video.write_videofile(output_path, codec="libx264", audio_codec="aac")
                 
-                new_video.write_videofile(output_path, codec="libx264", audio_codec="aac")
-            
             return jsonify({"filename": output_filename})
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         finally:
-            # Cleanup temp input file
-            if os.path.exists(input_path):
-                os.remove(input_path)
-
+            if os.path.exists(input_path): os.remove(input_path)
     return render_template('06_videotrim.html')
 
 # # 🔽 download route
