@@ -2,9 +2,10 @@ from flask import Flask, request ,render_template,send_from_directory,jsonify
 from PIL import Image
 from pdf2image import convert_from_path
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+import os, time, uuid
+
 from moviepy import VideoFileClip                   
 from moviepy.video.fx import MultiplySpeed, BlackAndWhite
-import os, time, uuid
 
 app = Flask(__name__)
 
@@ -20,6 +21,9 @@ def front():
 
 @app.route('/resizer', methods=['GET', 'POST'])
 def resize_image():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == 'POST':
         if 'image' not in request.files:
             return "No image uploaded", 400
@@ -68,6 +72,9 @@ def format_size(size_kb):
 
 @app.route('/compressor', methods=['GET','POST'])
 def compress_image():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == 'POST':
         if 'image' not in request.files:
             return "No image uploaded", 400
@@ -119,6 +126,9 @@ import uuid
 
 @app.route('/convertor', methods=['GET', 'POST'])
 def convert_image():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == 'POST':
         files = request.files.getlist('image')
         convert_type = request.form.get('type')
@@ -195,6 +205,9 @@ def convert_image():
 
 @app.route('/pdf_tool', methods=['GET', 'POST'])
 def pdf_tool():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == 'POST':
         files = request.files.getlist('pdfs')
         pdf_type = request.form.get('type')
@@ -271,6 +284,9 @@ def upload_image():
 
 @app.route('/crop_rotate', methods=['GET','POST'])
 def crop_rotate():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == 'POST':
         file = request.files['image']
         filename = str(uuid.uuid4()) + ".jpg"
@@ -299,6 +315,9 @@ def apply_sepia(clip):
 
 @app.route('/video_trim', methods=['GET', 'POST'])
 def video_trim():
+
+    delete_old_files(OUTPUT_FOLDER, minutes=5)
+
     if request.method == "POST":    
         file = request.files.get('video')
         start_time = float(request.form.get('start', 0))
@@ -350,7 +369,26 @@ def video_trim():
             if os.path.exists(input_path): os.remove(input_path)
     return render_template('06_videotrim.html')
 
-# # 🔽 download route
+# ----------------Delete data after five minutes----------------------------
+def delete_old_files(folder_path, minutes=5):
+    now = time.time()
+    cutoff = now - (minutes * 60) # 5 minutes ko seconds mein badla
+
+    if os.path.exists(folder_path):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            
+            # Check karein ki ye file hai (folder nahi) aur purani hai
+            if os.path.isfile(file_path):
+                file_age = os.path.getmtime(file_path)
+                if file_age < cutoff:
+                    try:
+                        os.remove(file_path)
+                        print(f"Deleted old file: {filename}")
+                    except Exception as e:
+                        print(f"Error deleting {filename}: {e}")
+
+#------------preview-----and------download-------------------
 @app.route('/outputs/<filename>')
 def get_output_file(filename):
     return send_from_directory(OUTPUT_FOLDER, filename)
@@ -359,8 +397,10 @@ def get_output_file(filename):
 def download_file(filename):
     return send_from_directory(OUTPUT_FOLDER, filename,as_attachment=True)
 
+
+
 if __name__ == "__main__":
-    # port = int(os.environ.get("PORT", 5000))
-    # app.run(host="0.0.0.0", port=port)
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    # app.run(debug=True)
      
